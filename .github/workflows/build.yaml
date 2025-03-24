@@ -1,0 +1,23 @@
+name: Build and Upload Package
+
+on:
+  workflow_run:
+    workflows:
+      - CI - Tests - Security
+    types:
+      - completed
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+      #      if: startsWith(github.event.workflow_run.head_commit.ref, 'refs/tags/v') && github.event.workflow_run.conclusion == 'success'
+    if: github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      - name: Checkout code
+         uses: actions/checkout@v4
+
+      - name: Debug
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
